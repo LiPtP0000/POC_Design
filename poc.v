@@ -19,7 +19,7 @@ module POC (
   // From Top module
 
   input wire i_mode;  // 0 = query, 1 = interrupt
-  
+
   // From/to Processor
 
   input wire i_addr;  // 0: status, 1: buffer    
@@ -43,7 +43,6 @@ module POC (
   reg enable_printer;
   wire interrupt;
   reg ready;
-  reg [7:0] status_to_processor;
 
 
 
@@ -132,10 +131,9 @@ module POC (
   always @(*) begin
     case (state)
       IDLE: begin
-        status              = {7'b1000000, mode};  // reset to POC ready
-        status_to_processor = status;
-        printer_data        = 8'b0;  // every cycle reset the printer data
-        enable_printer      = 1'b0;  // every cycle reset the printer status
+        status         = {7'b1000000, mode};  // reset to POC ready
+        printer_data   = 8'b0;  // every cycle reset the printer data
+        enable_printer = 1'b0;  // every cycle reset the printer status
       end
       POLLING_CPU_WRITE: begin
         // CPU needs to write both buffer and status in this state
@@ -146,13 +144,6 @@ module POC (
           status = i_din;
         end
       end
-      POLLING_TO_PRINTER: begin
-        if (ready == 1'b1) begin
-          printer_data   = buffer;
-          enable_printer = 1'b1;
-          // status[7] = 1'b1;
-        end
-      end
       INTERRUPT_CPU_WRITE: begin
         if (i_rw == 1'b1 && i_addr == 1'b1) begin
           buffer = i_din;
@@ -161,21 +152,29 @@ module POC (
           status = i_din;
         end
       end
-      INTERRUPT_TO_PRINTER: begin
-        if (ready == 1'b1) begin
-          printer_data   = buffer;
-          enable_printer = 1'b1;
-          // status[7] = 1'b1;
+    endcase
+  end
+
+  always @(posedge i_clk or negedge i_rst_n) begin
+    if (!i_rst_n) enable_printer <= 1'b0;
+    else begin
+      if (state == POLLING_TO_PRINTER || state == INTERRUPT_TO_PRINTER) begin
+
+        if (ready == 1'b1 && enable_printer == 1'b0) begin
+          printer_data   <= buffer;
+          enable_printer <= 1'b1;
+        end else if (enable_printer == 1'b1) begin
+          enable_printer <= 1'b0;
         end
       end
-    endcase
+    end
   end
 
   // Assignments
   assign o_irq = ~interrupt;
   assign o_tr = enable_printer;
   assign o_pd = printer_data;
-  assign o_dout = status_to_processor;
+  assign o_dout = status;
 
   assign interrupt = status[7] & status[0];
 

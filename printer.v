@@ -19,14 +19,13 @@ module PRINTER (
 
   // inside printer
   reg [7:0] delay_buffer[0:3];  // for delaying 4 cycles
-  reg ready;
   reg [2:0] count;
   reg state, next_state;
 
   parameter IDLE = 1'b0;
   parameter BUSY = 1'b1;
 
-  assign o_rdy = ready;
+
   always @(posedge i_clk or negedge i_rst_n) begin
     if (!i_rst_n) begin
       state <= IDLE;
@@ -63,20 +62,16 @@ module PRINTER (
   // counter
   always @(posedge i_clk or negedge i_rst_n) begin
     if (!i_rst_n) begin
-      ready <= 1'b1;
       count <= 3'b0;
     end else begin
       case (state)
         IDLE: begin
-          ready <= 1'b1;
           count <= 3'b0;
         end
         BUSY: begin
-          ready <= 1'b0;
           count <= count + 1;
         end
         default: begin
-          ready <= 1'b1;
           count <= 3'b0;
         end
       endcase
@@ -107,6 +102,8 @@ module PRINTER (
       delay_buffer[3] <= delay_buffer[2];
     end
   end
+
   assign o_data = delay_buffer[3];
+  assign o_rdy  = (state == IDLE) ? 1'b1 : 1'b0;
 
 endmodule

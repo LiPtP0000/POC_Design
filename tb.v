@@ -39,41 +39,100 @@ module tb_POC;
 
   // Mode switching after 100,000 ns
   initial begin
-    #100000 reset = 0;
-    #50 reset = 1;
-    #50 mode = 1;
+    #100000 mode = 1;
   end
 
   // Periodic Data Input
   initial begin
-    #100;  
+    #100;
     while (1) begin
       if (mode == 0) begin
-        data_in = 8'b00000001;
-        #20;
-        data_in = 8'b00000011;
-        #20;
-        data_in = 8'b00000111;
-        #20;
-        data_in = 8'b00001111;
-        #20;
-        data_in = 8'b00011111;
-        #20;
         data_in = 8'b00000000;
-        #20;
+        #320;
+        data_in = 8'b00000001;
+        #320;
+        data_in = 8'b00000010;
+        #320;
+        data_in = 8'b00000011;
+        #320;
+        data_in = 8'b00000100;
+        #320;
+        data_in = 8'b00000101;
+        #320;
+        data_in = 8'b00000110;
+        #320;
+        data_in = 8'b00000111;
+        #320;
+        data_in = 8'b00001000;
+        #320;
+        data_in = 8'b00001001;
+        #320;
+        data_in = 8'b00001010;
+        #320;
+        data_in = 8'b00001011;
+        #320;
+        data_in = 8'b00001100;
+        #320;
+        data_in = 8'b00001101;
+        #320;
+        data_in = 8'b00001110;
+        #320;
+        data_in = 8'b00001111;
+        #320;
+        data_in = 8'b00010000;
+        #320;
+        data_in = 8'b00010001;
+        #320;
+        data_in = 8'b00010010;
+        #320;
+        data_in = 8'b00010011;
+        #320;
+        data_in = 8'b00010100;
+        #320;
       end else begin
-        data_in = 8'b00000001;
-        #20;
-        data_in = 8'b00000011;
-        #20;
-        data_in = 8'b00000111;
-        #20;
-        data_in = 8'b00001111;
-        #20;
-        data_in = 8'b00011111;
-        #20;
         data_in = 8'b00000000;
-        #20;
+        #320;
+        data_in = 8'b00000001;
+        #320;
+        data_in = 8'b00000010;
+        #320;
+        data_in = 8'b00000011;
+        #320;
+        data_in = 8'b00000100;
+        #320;
+        data_in = 8'b00000101;
+        #320;
+        data_in = 8'b00000110;
+        #320;
+        data_in = 8'b00000111;
+        #320;
+        data_in = 8'b00001000;
+        #320;
+        data_in = 8'b00001001;
+        #320;
+        data_in = 8'b00001010;
+        #320;
+        data_in = 8'b00001011;
+        #320;
+        data_in = 8'b00001100;
+        #320;
+        data_in = 8'b00001101;
+        #320;
+        data_in = 8'b00001110;
+        #320;
+        data_in = 8'b00001111;
+        #320;
+        data_in = 8'b00010000;
+        #320;
+        data_in = 8'b00010001;
+        #320;
+        data_in = 8'b00010010;
+        #320;
+        data_in = 8'b00010011;
+        #320;
+        data_in = 8'b00010100;
+        #320;
+
       end
     end
   end

@@ -31,6 +31,6 @@ if not os.path.exists(vcd_file):
     exit(1)
 
 # 4. 打开 GTKWave 查看波形
-gtkwave_cmd = f"gtkwave {vcd_file}"
+gtkwave_cmd = f"gtkwave {vcd_file} -a POC0320.gtkw"
 print(f"Opening GTKWave: {gtkwave_cmd}")
 subprocess.Popen(gtkwave_cmd, shell=True)  # 非阻塞调用

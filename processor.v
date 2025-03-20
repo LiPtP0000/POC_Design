@@ -23,7 +23,7 @@ module PROCESSOR (
   output reg [7:0] o_din;  // Data to POC
   output wire o_addr;
   output wire o_rw;
-  
+
   // Internal registers
   reg [7:0] poc_status;
   reg address;
@@ -66,7 +66,7 @@ module PROCESSOR (
         else next_state = IDLE;
       end
       READ_FROM_POC: begin
-        if (read_status_done) next_state = SET_DATA;
+        if (read_status_done && poc_status[7] == 1'b1) next_state = SET_DATA;
         else next_state = READ_FROM_POC;
       end
       SET_DATA: begin
