@@ -43,7 +43,7 @@ module POC (
   reg enable_printer;
   wire interrupt;
   reg ready;
-
+  reg tr_triggered;
 
 
   // State Params
@@ -156,16 +156,20 @@ module POC (
   end
 
   always @(posedge i_clk or negedge i_rst_n) begin
-    if (!i_rst_n) enable_printer <= 1'b0;
-    else begin
+    if (!i_rst_n) begin
+      enable_printer <= 1'b0;
+      tr_triggered   <= 1'b0;
+    end else begin
       if (state == POLLING_TO_PRINTER || state == INTERRUPT_TO_PRINTER) begin
-
-        if (ready == 1'b1 && enable_printer == 1'b0) begin
+        if (ready == 1'b1 && enable_printer == 1'b0 && tr_triggered == 1'b0) begin
           printer_data   <= buffer;
           enable_printer <= 1'b1;
         end else if (enable_printer == 1'b1) begin
           enable_printer <= 1'b0;
+          tr_triggered   <= 1'b1;
         end
+      end else begin
+        tr_triggered <= 1'b0;
       end
     end
   end
